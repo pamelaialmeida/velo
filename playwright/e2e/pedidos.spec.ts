@@ -1,23 +1,28 @@
-import { test } from '../support/fixtures';
+import { test, expect } from '@playwright/test';
 import { generateOrderCode } from '../support/helpers.ts';
-import { OrderDetails } from '../support/actions/orderLookupActions.ts';
+import { Navbar } from '../support/components/NavBar.ts'; 
+import { LandingPage } from '../support/pages/LandingPage.ts';
+import { OrderLookupPage, OrderDetails } from '../support/pages/OrderLookupPage.ts';
 
 test.describe('Consulta de Pedidos', () => {
 
-    test.beforeEach(async ({ app }) => {
+    let orderLookupPage: OrderLookupPage;
+
+    test.beforeEach(async ({ page }) => {
         // Arrange
         // await page.goto('http://localhost:5173/');
         // await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
         // await page.getByRole('link', { name: 'Consultar Pedido' }).click();
         // await expect(page.getByRole('heading')).toContainText('Consultar Pedido');
-        await app.landing.goTo();
+        await new LandingPage(page).goTo();
 
-        await app.navbar.orderLookupLink();
+        await new Navbar(page).orderLookupLink();
 
-        await app.orderLookup.validatePageLoaded();
+        orderLookupPage = new OrderLookupPage(page);
+        orderLookupPage.validatePageLoaded();
     });
 
-    test('Deve consultar um pedido aprovado', async ({ app }) => {
+    test('Deve consultar um pedido aprovado', async ({ page }) => {
         // Test Data
         //const order = 'VLO-C8PNMW';
 
@@ -47,7 +52,7 @@ test.describe('Consulta de Pedidos', () => {
         //await page.getByRole('button', { name: 'Buscar Pedido' }).click();
 
         //const orderLookupPage = new OrderLookupPage(page);
-        await app.orderLookup.searchOrder(order.number);
+        await orderLookupPage.searchOrder(order.number);
 
         // Assert
 
@@ -82,9 +87,9 @@ test.describe('Consulta de Pedidos', () => {
         //     - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
         //     `);
 
-        await app.orderLookup.validateOrderDetails(order);
+        await orderLookupPage.validateOrderDetails(order);
 
-        await app.orderLookup.validateStatusBadge(order.status);
+        await orderLookupPage.validateStatusBadge(order.status);
 
             // const statusBadge = page.getByRole('status').filter({hasText: order.status});
             // await expect(statusBadge).toHaveClass(/bg-green-100/);
@@ -118,7 +123,7 @@ test.describe('Consulta de Pedidos', () => {
         // await expect(page.getByText('APROVADO')).toBeVisible();
     });
 
-    test('Deve consultar um pedido em analise', async ({ app }) => {
+    test('Deve consultar um pedido em analise', async ({ page }) => {
         //Arrange
         const order: OrderDetails = {
             number: 'VLO-MG9BYE',
@@ -136,7 +141,7 @@ test.describe('Consulta de Pedidos', () => {
         //await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order.number);
         //await page.getByRole('button', { name: 'Buscar Pedido' }).click();
         //const orderLookupPage = new OrderLookupPage(page);
-        await app.orderLookup.searchOrder(order.number);
+        await orderLookupPage.searchOrder(order.number);
 
         // Assert
 
@@ -171,7 +176,7 @@ test.describe('Consulta de Pedidos', () => {
         //     - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
         //     `);
 
-        await app.orderLookup.validateOrderDetails(order);
+        await orderLookupPage.validateOrderDetails(order);
 
             // const statusBadge = page.getByRole('status').filter({hasText: order.status});
             // await expect(statusBadge).toHaveClass(/bg-amber-100/);
@@ -180,11 +185,11 @@ test.describe('Consulta de Pedidos', () => {
             // const statusIcon = statusBadge.locator('svg');
             // await expect(statusIcon).toHaveClass(/lucide-clock/);
 
-        await app.orderLookup.validateStatusBadge(order.status);
+        await orderLookupPage.validateStatusBadge(order.status);
     });
 
 
-    test('Deve consultar um pedido reprovado', async ({ app }) => {
+    test('Deve consultar um pedido reprovado', async ({ page }) => {
         // Test Data
         const order: OrderDetails = {
             number: 'VLO-VMXBKJ',
@@ -212,7 +217,7 @@ test.describe('Consulta de Pedidos', () => {
         //await page.getByRole('button', { name: 'Buscar Pedido' }).click();
 
         //const orderLookupPage = new OrderLookupPage(page);
-        await app.orderLookup.searchOrder(order.number);
+        await orderLookupPage.searchOrder(order.number);
 
         // Assert
 
@@ -247,7 +252,7 @@ test.describe('Consulta de Pedidos', () => {
         //     - paragraph: /R\\$ \\d+\\.\\d+,\\d+/
         //     `);
 
-        await app.orderLookup.validateOrderDetails(order);
+        await orderLookupPage.validateOrderDetails(order);
 
             // const statusBadge = page.getByRole('status').filter({hasText: order.status});
             // await expect(statusBadge).toHaveClass(/bg-red-100/);
@@ -256,17 +261,17 @@ test.describe('Consulta de Pedidos', () => {
             // const statusIcon = statusBadge.locator('svg');
             // await expect(statusIcon).toHaveClass(/lucide-circle-x/);
 
-        await app.orderLookup.validateStatusBadge(order.status);
+        await orderLookupPage.validateStatusBadge(order.status);
     });
 
-    test('Deve exibir mensagem de erro quando o pedido não é encontrado', async ({ app }) => {
+    test('Deve exibir mensagem de erro quando o pedido não é encontrado', async ({ page }) => {
         const order = generateOrderCode();
 
         // Act
         //await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order);
         //await page.getByRole('button', { name: 'Buscar Pedido' }).click();
         //const orderLookupPage = new OrderLookupPage(page);
-        await app.orderLookup.searchOrder(order);
+        await orderLookupPage.searchOrder(order);
 
         // Assert
         // const messageTitle = page.getByRole('heading', { name: 'Pedido não encontrado', level: 3});
@@ -275,19 +280,19 @@ test.describe('Consulta de Pedidos', () => {
         // const messageText = page.locator('p', {hasText: 'Verifique o número do pedido e tente novamente'});
         // await expect(messageText).toBeVisible();
 
-        await app.orderLookup.validateOrderNotFound();
+        await orderLookupPage.validateOrderNotFound();
 
     });
 
-    test('Deve exibir mensagem de erro quando o pedido está fora do padrão', async ({ app }) => {
+    test('Deve exibir mensagem de erro quando o pedido está fora do padrão', async ({ page }) => {
         const order = 'AB-INVALIDO-9931';
 
         // Act
         //const orderLookupPage = new OrderLookupPage(page);
-        await app.orderLookup.searchOrder(order);
+        await orderLookupPage.searchOrder(order);
 
         // Assert
-        await app.orderLookup.validateOrderNotFound();
+        await orderLookupPage.validateOrderNotFound();
     });
 
 });

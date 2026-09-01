@@ -1,4 +1,4 @@
-import { test, expect } from '../support/fixtures';
+import { test, expect } from '@playwright/test';
 
 test('Webapp deve estar online', async ({ page }) => {
   await page.goto('http://localhost:5173');
