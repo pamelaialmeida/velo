@@ -25,33 +25,33 @@ test.describe('Configuração do Veículo', () => {
         await app.configurator.expectCarImageSrc(/glacier-blue-aero-wheels/);
     });
 
-    test('deve atualizar o preço dinamicamente ao selecionar e desselecionar opcionais, e persistir no checkout', async ({ app, page }) => {
+    test('deve atualizar o preço dinamicamente ao selecionar e desselecionar opcionais, e persistir no checkout', async ({ app }) => {
         // Pré-condição: Preço base inicial
         await app.configurator.expectPrice('R$ 40.000,00');
 
         // Passo 1: Marcar o checkbox do opcional "Precision Park" (+ R$ 5.500,00)
-        await app.configurator.toggleOptional('Precision Park');
+        await app.configurator.togglePrecisionPark();
         await expect(app.configurator.elements.precisionParkCheckbox).toBeChecked();
         await app.configurator.expectPrice('R$ 45.500,00');
 
         // Passo 2: Marcar o checkbox do opcional "Flux Capacitor" (+ R$ 5.000,00)
-        await app.configurator.toggleOptional('Flux Capacitor');
+        await app.configurator.toggleFluxCapacitor();
         await expect(app.configurator.elements.fluxCapacitorCheckbox).toBeChecked();
         await app.configurator.expectPrice('R$ 50.500,00');
 
         // Passo 3: Desmarcar os checkboxes dos opcionais (retorno a R$ 40.000,00)
-        await app.configurator.toggleOptional('Precision Park');
+        await app.configurator.togglePrecisionPark();
         await expect(app.configurator.elements.precisionParkCheckbox).not.toBeChecked();
 
-        await app.configurator.toggleOptional('Flux Capacitor');
+        await app.configurator.toggleFluxCapacitor();
         await expect(app.configurator.elements.fluxCapacitorCheckbox).not.toBeChecked();
 
         await app.configurator.expectPrice('R$ 40.000,00');
 
         // Passo 4: Clicar no botão "Monte o Seu" (Checkout) e validar persistência
-        await app.configurator.goToCheckout();
-        await expect(page).toHaveURL(/\/order/);
-        await expect(page.getByTestId('summary-total-price')).toHaveText('R$ 40.000,00');
+        await app.configurator.finishConfiguration();
+        await app.checkout.expectCheckoutPage();
+        await app.checkout.expectTotalPrice('R$ 40.000,00');
     });
 
 })

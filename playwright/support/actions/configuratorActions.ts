@@ -23,9 +23,14 @@ export function createConfiguratorActions(page: Page) {
             await page.getByRole('button', { name }).click();
         },
 
-        async toggleOptional(name: string | RegExp) {
-            const locator = typeof name === 'string' ? new RegExp(name, 'i') : name;
-            await page.getByRole('checkbox', { name: locator }).click();
+        async togglePrecisionPark() {
+            await expect(precisionParkCheckbox).toBeVisible();
+            await precisionParkCheckbox.click();
+        },
+
+        async toggleFluxCapacitor() {
+            await expect(fluxCapacitorCheckbox).toBeVisible();
+            await fluxCapacitorCheckbox.click();
         },
 
         async expectPrice(price: string) {
@@ -39,7 +44,7 @@ export function createConfiguratorActions(page: Page) {
             await expect(carImage).toHaveAttribute('src', src);
         },
 
-        async goToCheckout() {
+        async finishConfiguration() {
             await page.getByRole('button', { name: 'Monte o Seu' }).click();
         }
     }
