@@ -1,4 +1,4 @@
-import { test } from '../support/fixtures';
+import { test, expect } from '../support/fixtures';
 import { generateOrderCode } from '../support/helpers.ts';
 import { OrderDetails } from '../support/actions/orderLookupActions.ts';
 
@@ -81,6 +81,13 @@ test.describe('Consulta de Pedidos', () => {
         await app.orderLookup.searchOrder(order);
 
         await app.orderLookup.validateOrderNotFound();
+    });
+
+    test('Deve manter o botao de buscar pedido desabilitado quando o campo de busca está vazio ou quando é preenchido somente com espacos', async ({ app }) => {
+        await expect(app.orderLookup.elements.searchButton).toBeDisabled();
+
+        await app.orderLookup.elements.orderInput.fill('   ');
+        await expect(app.orderLookup.elements.searchButton).toBeDisabled();
     });
 
 });
