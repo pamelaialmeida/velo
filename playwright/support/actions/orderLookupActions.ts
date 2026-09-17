@@ -7,26 +7,27 @@ export type OrderDetails = {
   status: OrderStatus;
   color: string;
   wheels: string;
-  customer: { name: string; email: string };
+  customer: { name: string; email: string; document: string; phone: string };
   payment: string;
+  total_price: string;
 };
 
 export function createOrderLookupActions(page: Page) {
 
   const orderInput = page.getByRole('textbox', { name: 'Número do Pedido' });
   const searchButton = page.getByRole('button', { name: 'Buscar Pedido' });
-  
+
   return {
 
     elements: {
       orderInput,
       searchButton,
     },
-    
+
     async open() {
       await page.goto('/');
       await expect(page.getByTestId('hero-section').getByRole('heading')).toContainText('Velô Sprint');
-      
+
       await page.getByRole('link', { name: 'Consultar Pedido' }).click();
 
       await expect(page.getByRole('heading')).toContainText('Consultar Pedido');
