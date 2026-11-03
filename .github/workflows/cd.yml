@@ -14,7 +14,7 @@ env:
   VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_SCOPE: fernandopapito-4832s-projects
+  VERCEL_SCOPE: pam-074c
 
 jobs:
   unit-tests:
@@ -117,7 +117,7 @@ jobs:
         run: yarn install
 
       # 5. Instalação do Chromium
-      - name: Install Plawright Browser
+      - name: Install Playwright Browser
         run: yarn playwright install --with-deps chromium
 
       # 6. Execução dos Testes de Regressão
