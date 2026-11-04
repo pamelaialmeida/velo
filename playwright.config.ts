@@ -35,6 +35,8 @@ export default defineConfig({
     ['html', { outputDir: './playwright-report' }],
     // Mandatory reporter for JSON results
     ['json', { outputFile: './playwright-report/report.json' }],
+    // Reporter oficial do TestDino (envia os dados em tempo real com a chave td_api_)
+    ['@testdino/playwright', { token: process.env.TESTDINO_TOKEN || process.env.TD_TOKEN }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
